@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const taskRoutes = require('./routes/taskRoutes');
+const authRoutes = require('./routes/authRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.json());
 
 // Rotas
 app.use('/api/tasks', taskRoutes);
+app.use('/api/auth', authRoutes);
 
 // Tratamento de erros
 app.use(errorHandler);

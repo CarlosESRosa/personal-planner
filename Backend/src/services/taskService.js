@@ -1,17 +1,19 @@
 const taskModel = require('../models/taskmodel');
 
 class TaskService {
-  async getAll() {
+  async getAll(userId) {
     try {
-      return await taskModel.getAll();
+      console.log('Service: Buscando todas as tarefas para o usuário:', userId);
+      return await taskModel.getAll(userId);
     } catch (error) {
       throw new Error('Erro ao buscar tarefas: ' + error.message);
     }
   }
 
-  async getById(id) {
+  async getById(id, userId) {
     try {
-      const task = await taskModel.getById(id);
+      console.log('Service: Buscando tarefa:', id, 'para o usuário:', userId);
+      const task = await taskModel.getById(id, userId);
       if (!task) {
         throw new Error('Tarefa não encontrada');
       }
@@ -23,6 +25,7 @@ class TaskService {
 
   async create(taskData) {
     try {
+      console.log('Service: Criando nova tarefa:', taskData);
       await this.validateTaskData(taskData);
       await this.validateIds(taskData);
       await this.validateDatetimes(taskData);
@@ -32,28 +35,32 @@ class TaskService {
     }
   }
 
-  async update(id, taskData) {
+  async update(id, taskData, userId) {
     try {
+      console.log('Service: Atualizando tarefa:', id, 'dados:', taskData);
       await this.validateTaskData(taskData);
       await this.validateIds(taskData);
       await this.validateDatetimes(taskData);
-      const task = await taskModel.getById(id);
+
+      const task = await taskModel.getById(id, userId);
       if (!task) {
         throw new Error('Tarefa não encontrada');
       }
-      return await taskModel.update(id, taskData);
+
+      return await taskModel.update(id, taskData, userId);
     } catch (error) {
       throw new Error('Erro ao atualizar tarefa: ' + error.message);
     }
   }
 
-  async remove(id) {
+  async remove(id, userId) {
     try {
-      const task = await taskModel.getById(id);
+      console.log('Service: Removendo tarefa:', id);
+      const task = await taskModel.getById(id, userId);
       if (!task) {
         throw new Error('Tarefa não encontrada');
       }
-      return await taskModel.remove(id);
+      return await taskModel.remove(id, userId);
     } catch (error) {
       throw new Error('Erro ao remover tarefa: ' + error.message);
     }
@@ -61,6 +68,7 @@ class TaskService {
 
   async getAllPriorities() {
     try {
+      console.log('Service: Buscando todas as prioridades');
       return await taskModel.getAllPriorities();
     } catch (error) {
       throw new Error('Erro ao buscar prioridades: ' + error.message);
@@ -69,6 +77,7 @@ class TaskService {
 
   async getAllCategories() {
     try {
+      console.log('Service: Buscando todas as categorias');
       return await taskModel.getAllCategories();
     } catch (error) {
       throw new Error('Erro ao buscar categorias: ' + error.message);
@@ -90,6 +99,9 @@ class TaskService {
     }
     if (!taskData.category_id) {
       throw new Error('ID da categoria é obrigatório');
+    }
+    if (!taskData.user_id) {
+      throw new Error('ID do usuário é obrigatório');
     }
   }
 

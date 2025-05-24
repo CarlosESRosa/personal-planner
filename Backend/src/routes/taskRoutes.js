@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const taskController = require('../controllers/taskController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 // Middleware de validação básica
 const validateTask = (req, res, next) => {
@@ -38,6 +39,8 @@ const validateTask = (req, res, next) => {
 
   next();
 };
+
+router.use(authMiddleware); // todas as rotas abaixo exigem autenticação
 
 // Rotas de tarefas
 router.get('/', taskController.getAll);
