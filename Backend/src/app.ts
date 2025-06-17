@@ -7,11 +7,13 @@ import { env } from './config/env'
 import { prismaPlugin } from './core/plugins/prisma'
 import { swaggerConfig } from './core/plugins/swagger'
 import { routes } from './routes'
+import { authPlugin } from './core/plugins/auth'
 
 export const app = Fastify({ logger: true })
 
 app.register(helmet)
 app.register(jwt, { secret: env.JWT_SECRET })
+app.register(authPlugin)
 app.register(prismaPlugin)
 app.register(swagger, swaggerConfig)
 app.register(swaggerUi, { routePrefix: '/docs' })
