@@ -1,24 +1,46 @@
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, Card, CardContent } from "@mui/material";
 
-function App() {
+const swatches = [
+  { name: "primary", className: "bg-primary" },
+  { name: "primary-dark", className: "bg-primary-dark" },
+  { name: "accent", className: "bg-accent text-white" },
+  { name: "accent-light", className: "bg-accent-light text-white" },
+  { name: "bg", className: "bg-bg" },
+  { name: "surface", className: "bg-surface" },
+  { name: "success", className: "bg-success text-white" },
+  { name: "warning", className: "bg-warning text-white" },
+  { name: "error", className: "bg-error text-white" },
+];
+
+export default function App() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="rounded-xl bg-white p-8 shadow-2xl">
-        <h1 className="mb-4 text-4xl font-extrabold text-primary">
-          Tailwind + React + MUI
-        </h1>
+    <div className="flex min-h-screen flex-col items-center justify-center gap-8 bg-bg p-6">
+      <h1 className="text-4xl font-extrabold text-primary">
+        Paleta personalizada ✔️
+      </h1>
 
-        <p className="text-gray-700">
-          Se você vê esta caixa estilizada, o Tailwind está funcionando&nbsp;🎉
-        </p>
-
-        <Button variant="contained" className="mt-6">
-          Botão MUI
-        </Button>
+      {/* grade com as amostras */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        {swatches.map(({ name, className }) => (
+          <div
+            key={name}
+            className={`${className} flex h-20 w-36 items-center justify-center rounded-md shadow`}
+          >
+            <span className="text-sm font-semibold">
+              {name}
+            </span>
+          </div>
+        ))}
       </div>
+
+      {/* botão MUI deve vir na cor primária automaticamente */}
+      <Card className="mt-6 shadow-lg">
+        <CardContent className="flex flex-col items-center gap-4">
+          <p>Botão Material UI consumindo `theme.palette.primary`:</p>
+          <Button variant="contained">Confirmar</Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }
-
-export default App;

@@ -1,6 +1,17 @@
 @import "tailwindcss";
 
-/* personalizações (exemplo) */
+/* --- Paleta da aplicação --- */
 @theme {
-  --color-primary: #1976d2;   /* mesmo azul do MUI */
+  --color-primary:       #FFBA08;  /* amarelo-ouro */
+  --color-primary-dark:  #E0A200;
+  --color-accent:        #161616;  /* quase-preto */
+  --color-accent-light:  #323232;
+  --color-bg:            #F5F5F5;  /* cinza muito claro */
+  --color-surface:       #FFFFFF;  /* branco */
+  --color-success:       #2AA84F;
+  --color-warning:       #F79009;
+  --color-error:         #E53935;
 }
+
+/* utilitário opcional — corpo da página já no bg padronizado */
+body { @apply bg-bg text-accent; }
