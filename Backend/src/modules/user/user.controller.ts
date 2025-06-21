@@ -2,6 +2,8 @@
 import { FastifyInstance } from 'fastify'
 import bcrypt from 'bcrypt'
 
+const JWT_OPTIONS = { expiresIn: "5m" };
+
 export async function userController(app: FastifyInstance) {
     /* ----- /users/register ----- */
     app.post('/users/register', {
@@ -26,7 +28,7 @@ export async function userController(app: FastifyInstance) {
                 select: { id: true, name: true, email: true, createdAt: true },
             });
 
-            const token = app.jwt.sign({ id: user.id });
+            const token = app.jwt.sign({ id: user.id }, JWT_OPTIONS);
 
             reply.code(201).send({ token, user });
         },
@@ -60,7 +62,7 @@ export async function userController(app: FastifyInstance) {
                 email: dbUser.email,
                 createdAt: dbUser.createdAt,
             };
-            const token = app.jwt.sign({ id: dbUser.id });
+            const token = app.jwt.sign({ id: dbUser.id }, JWT_OPTIONS);
 
             reply.send({ token, user });
         },

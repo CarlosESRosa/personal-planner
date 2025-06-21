@@ -12,17 +12,17 @@ import {
     registerSchema,
     type RegisterFormData,
 } from "../../schemas/auth";
-import { showAlert } from "../../utils/alert";
+import { useAlert } from "../../components/ui/AlertProvider";
 
 export default function Register() {
     const { register: signup } = useAuth();
     const navigate = useNavigate();
+    const { show } = useAlert();
 
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-        watch,
     } = useForm<RegisterFormData>({
         resolver: zodResolver(registerSchema),
         mode: "onBlur",
@@ -33,16 +33,9 @@ export default function Register() {
             await signup(data.name, data.email, data.password);
             navigate("/tarefas");
         } catch {
-            showAlert({
-                title: "Erro ao cadastrar",
-                text: "Tente novamente mais tarde.",
-                icon: "error",
-            });
+            // toast de erro já tratado dentro do AuthContext
         }
     };
-
-    /* opcional: para exibir a força da senha em tempo-real */
-    const currentPassword = watch("password");
 
     return (
         <main className="min-h-screen flex items-center justify-center bg-bg px-4">

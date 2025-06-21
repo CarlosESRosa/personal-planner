@@ -8,11 +8,12 @@ import PasswordInput from "../../components/ui/inputs/PasswordInput";
 import PrimaryButton from "../../components/ui/PrimaryButton";
 
 import { loginSchema, type LoginFormData } from "../../schemas/auth";
-import { showAlert } from "../../utils/alert";
+import { useAlert } from "../../components/ui/AlertProvider";
 
 export default function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const { show } = useAlert();
 
     const {
         register,
@@ -28,11 +29,7 @@ export default function Login() {
             await login(data.email, data.senha);
             navigate("/tarefas");
         } catch {
-            showAlert({
-                title: "Erro ao entrar",
-                text: "Credenciais inválidas. Verifique seu e-mail e senha.",
-                icon: "error",
-            });
+            // o toast de erro já é disparado no AuthContext
         }
     };
 
@@ -71,10 +68,7 @@ export default function Login() {
 
                 <p className="mt-6 text-center text-sm">
                     Ainda não tem conta?{" "}
-                    <a
-                        href="/cadastro"
-                        className="text-secondary font-bold underline"
-                    >
+                    <a href="/cadastro" className="text-secondary font-bold underline">
                         Cadastre-se agora
                     </a>
                 </p>
