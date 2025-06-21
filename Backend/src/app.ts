@@ -1,4 +1,5 @@
 import Fastify from 'fastify'
+import cors from "@fastify/cors";
 import helmet from '@fastify/helmet'
 import jwt from '@fastify/jwt'
 import swagger from '@fastify/swagger'
@@ -11,6 +12,14 @@ import { authPlugin } from './core/plugins/auth'
 
 export const app = Fastify({ logger: true })
 
+app.register(
+    cors,
+    {
+        origin: ["*"],
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    },
+);
 app.register(helmet)
 app.register(jwt, { secret: env.JWT_SECRET })
 app.register(authPlugin)

@@ -1,17 +1,29 @@
+/* ./src/styles/theme.css */
 @import "tailwindcss";
 
-/* --- Paleta da aplicação --- */
+/* --- Tema Dark --- */
 @theme {
-  --color-primary:       #FFBA08;  /* amarelo-ouro */
-  --color-primary-dark:  #E0A200;
-  --color-accent:        #161616;  /* quase-preto */
-  --color-accent-light:  #323232;
-  --color-bg:            #F5F5F5;  /* cinza muito claro */
-  --color-surface:       #FFFFFF;  /* branco */
-  --color-success:       #2AA84F;
-  --color-warning:       #F79009;
-  --color-error:         #E53935;
+  /* Brand */
+  --color-primary:       #FFC107; /* Amber 500 – toque vibrante */
+  --color-primary-dark:  #FFB300; /* Amber 600 – hover/active */
+
+  /* Textos */
+  --color-accent:        #E0E0E0; /* Grey 300 – texto primário em telas escuras */
+  --color-accent-light:  #BDBDBD; /* Grey 400 – texto secundário/ícones */
+
+  /* Backgrounds & superfícies */
+  --color-bg:            #121212; /* Grey 950 – plano de fundo geral */
+  --color-surface:       #1E1E1E; /* Grey 900 – cartões, modais, nav bars */
+
+  /* Feedback */
+  --color-success:       #4CAF50; /* Green 500 */
+  --color-warning:       #FF9800; /* Orange 500 */
+  --color-error:         #F44336; /* Red 500 */
+
+  /* Conteúdo sobre cores fortes (legibilidade) */
+  --color-on-primary:    #212121; /* Grey 900 – texto sobre botões amarelos */
 }
 
-/* utilitário opcional — corpo da página já no bg padronizado */
-body { @apply bg-bg text-accent; }
+body {
+  @apply bg-bg text-accent antialiased;
+}
