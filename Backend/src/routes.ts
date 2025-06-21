@@ -28,6 +28,14 @@ export async function routes(app: FastifyInstance) {
     app.addSchema({ $id: 'registerBody', ...zodToJsonSchema(registerBody, { target: 'openApi3' }) })
     app.addSchema({ $id: 'loginBody', ...zodToJsonSchema(loginBody, { target: 'openApi3' }) })
     app.addSchema({ $id: 'updateBody', ...zodToJsonSchema(updateBody, { target: 'openApi3' }) })
+    app.addSchema({
+        $id: 'UserResponse', type: 'object', properties: {
+            id: { type: 'string', format: 'uuid' },
+            name: { type: 'string' },
+            email: { type: 'string' },
+            createdAt: { type: 'string', format: 'date-time' },
+        },
+    });
 
     app.addSchema({ $id: 'createTaskBody', ...zodToJsonSchema(createTaskBody, { target: 'openApi3' }) })
     app.addSchema({ $id: 'updateTaskBody', ...zodToJsonSchema(updateTaskBody, { target: 'openApi3' }) })

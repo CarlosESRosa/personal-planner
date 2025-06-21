@@ -55,18 +55,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = async (email: string, password: string) => {
         try {
             setLoading(true);
+            const { token, user } = await loginService({ email, password });
 
-            const { token } = await loginService({ email, password });
             localStorage.setItem("access_token", token);
-            setToken(token);
-            setAuthHeader(token);
+            localStorage.setItem("user", JSON.stringify(user));
+            api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-            const me = await meService();
-            setUser(me);
-            localStorage.setItem("user", JSON.stringify(me));
-        } catch (err: any) {
-            Swal.fire("Erro", err.response?.data?.message ?? "Falha no login", "error");
-            throw err;
+            setToken(token);
+            setUser(user);
         } finally {
             setLoading(false);
         }
@@ -76,18 +72,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const register = async (name: string, email: string, password: string) => {
         try {
             setLoading(true);
+            const { token, user } = await registerService({ name, email, password });
 
-            const { token } = await registerService({ name, email, password });
             localStorage.setItem("access_token", token);
-            setToken(token);
-            setAuthHeader(token);
+            localStorage.setItem("user", JSON.stringify(user));
+            api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-            const me = await meService(); // já devolve usuário criado
-            setUser(me);
-            localStorage.setItem("user", JSON.stringify(me));
-        } catch (err: any) {
-            Swal.fire("Erro", err.response?.data?.message ?? "Falha no cadastro", "error");
-            throw err;
+            setToken(token);
+            setUser(user);
         } finally {
             setLoading(false);
         }

@@ -4,35 +4,32 @@ export interface User {
     id: string;
     name: string;
     email: string;
+    createdAt: string;
 }
 
-/* ---------- login → só token ---------- */
+type AuthResponse = { token: string; user: User };
+
+/* login */
 export async function loginService(credentials: {
     email: string;
     password: string;
 }) {
-    const { data } = await api.post<{ token: string }>(
-        "/users/login",
-        credentials,
-    );
-    return data; // { token }
+    const { data } = await api.post<AuthResponse>("/users/login", credentials);
+    return data;
 }
 
-/* ---------- register → só token ---------- */
+/* register */
 export async function registerService(payload: {
     name: string;
     email: string;
     password: string;
 }) {
-    const { data } = await api.post<{ token: string }>(
-        "/users/register",
-        payload,
-    );
-    return data; // { token }
+    const { data } = await api.post<AuthResponse>("/users/register", payload);
+    return data;
 }
 
-/* ---------- usuário logado ---------- */
+/*  útil para hidratação automática ou refresh */
 export async function meService() {
     const { data } = await api.get<User>("/users/me");
-    return data; // { id, name, email }
+    return data;
 }

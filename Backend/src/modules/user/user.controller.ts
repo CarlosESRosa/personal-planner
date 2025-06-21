@@ -7,17 +7,30 @@ export async function userController(app: FastifyInstance) {
     app.post('/users/register', {
         schema: {
             body: { $ref: 'registerBody#' },
-            response: { 201: { type: 'null' } }
+            response: {
+                201: {
+                    type: 'object',
+                    properties: {
+                        token: { type: 'string' },
+                        user: { $ref: 'UserResponse#' },
+                    },
+                },
+            },
         },
         handler: async (req, reply) => {
-            const data = req.body as any
-            const hash = await bcrypt.hash(data.password, 12)
-            await app.prisma.user.create({
-                data: { ...data, password: hash }
-            })
-            reply.code(201).send()
-        }
-    })
+            const data = req.body as any;
+            const hash = await bcrypt.hash(data.password, 12);
+
+            const user = await app.prisma.user.create({
+                data: { ...data, password: hash },
+                select: { id: true, name: true, email: true, createdAt: true },
+            });
+
+            const token = app.jwt.sign({ id: user.id });
+
+            reply.code(201).send({ token, user });
+        },
+    });
 
     /* ----- /users/login ----- */
     app.post('/users/login', {
@@ -26,21 +39,32 @@ export async function userController(app: FastifyInstance) {
             response: {
                 200: {
                     type: 'object',
-                    properties: { token: { type: 'string' } }
-                }
-            }
+                    properties: {
+                        token: { type: 'string' },
+                        user: { $ref: 'UserResponse#' },
+                    },
+                },
+            },
         },
         handler: async (req, reply) => {
-            const { email, password } = req.body as any
-            const user = await app.prisma.user.findUnique({ where: { email } })
-            if (!user || !(await bcrypt.compare(password, user.password))) {
-                return reply.code(400).send({ message: 'Invalid credentials' })
-            }
-            const token = app.jwt.sign({ id: user.id })
-            reply.send({ token })
-        }
-    })
+            const { email, password } = req.body as any;
 
+            const dbUser = await app.prisma.user.findUnique({ where: { email } });
+            if (!dbUser || !(await bcrypt.compare(password, dbUser.password))) {
+                return reply.code(400).send({ message: 'Invalid credentials' });
+            }
+
+            const user = {
+                id: dbUser.id,
+                name: dbUser.name,
+                email: dbUser.email,
+                createdAt: dbUser.createdAt,
+            };
+            const token = app.jwt.sign({ id: dbUser.id });
+
+            reply.send({ token, user });
+        },
+    });
     /* ----- /users/me (GET) ----- */
     app.get('/users/me', {
         preHandler: [app.authenticate],
